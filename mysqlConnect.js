@@ -19,14 +19,21 @@ connection.connect(function(err) {
 		connection.query('INSERT INTO boxSubscriptions (name, subscribers, price) VALUES ("TestBox", 1000, 14.99)', function(err, result) {
 			if (err) throw err;
 			console.log('Row inserted...');
-			connection.query('SELECT * FROM boxSubscriptions', function(err, results) {
-				if (err) throw err;
-				console.log('Row pulled...');
-				console.log(results[0].id);
-				console.log(results[0].name);
-				console.log(results[0].subscribers);
-				console.log(results[0].price);
-			});
+		});
+		connection.query('INSERT INTO boxSubscriptions (name, subscribers, price) VALUES ("Test2", 70, 12.50)', function(err, result) {
+			if (err) throw err;
+			console.log('Row2 inserted...');
 		});
 	});
 });
+
+app.set('port', 3000);
+app.set('view engine', 'jade');
+app.set('views', __dirname + '/views');
+app.get('/', function(req, res) {
+	connection.query('SELECT * FROM boxSubscriptions', function(err, rows) {
+		res.render('index', {boxSubs : rows});
+	});
+});
+
+app.listen(app.get('port'));
